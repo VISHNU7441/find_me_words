@@ -71,5 +71,4 @@ class HomePageController extends _$HomePageController {
     // local DB / cache
     return ["Offline Result 1", "Offline Result 2"];
   }
-
 }

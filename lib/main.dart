@@ -1,4 +1,4 @@
-import 'package:find_me_words/feature/home/presentation/pages/home_page.dart';
+import 'package:find_me_words/feature/splash/presentation/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }

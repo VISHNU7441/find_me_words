@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:find_me_words/core/database/app_database.dart';
+import 'package:find_me_words/core/database/services/dictionary_query_service.dart';
 import 'package:find_me_words/feature/home/presentation/states/home_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -7,6 +9,9 @@ part 'home_page_controller.g.dart';
 @riverpod
 class HomePageController extends _$HomePageController {
   Timer? _debounce;
+
+  final AppDatabase _database = AppDatabase();
+  late final DictionaryQueryService _queryService = DictionaryQueryService(_database);
 
   @override
   HomeState build() {
@@ -38,15 +43,10 @@ class HomePageController extends _$HomePageController {
     state = state.copyWith(isLoading: true);
 
     try {
-      final hasInternet = await _checkInternet();
 
       List<String> results;
 
-      if (hasInternet) {
-        results = await _fetchFromApi(query);
-      } else {
-        results = await _fetchFromLocal(query);
-      }
+      results =  await _queryService.searchSuggestions(query);
 
       state = state.copyWith(
         suggestions: results,
@@ -57,18 +57,17 @@ class HomePageController extends _$HomePageController {
     }
   }
 
-  Future<bool> _checkInternet() async {
-    // implement using connectivity package
-    return true;
-  }
 
-  Future<List<String>> _fetchFromApi(String query) async {
-    // call backend
-    return ["Apple", "Application", "Apply"];
-  }
+  Future<void> _searchFor(String word) async {
+      final isPresent = await _queryService.isWordPresent(word);
+      final isFullExplanationPresent = await _queryService.isWordHasFullExplanation(word);
 
-  Future<List<String>> _fetchFromLocal(String query) async {
-    // local DB / cache
-    return ["Offline Result 1", "Offline Result 2"];
+      if (isPresent && isFullExplanationPresent) {
+        // get full json and parse it
+      } else if (isPresent) {
+        // call the api with the hasBasicMeaning flag = true
+      } else {
+        // call the api with the hasBasicMeaning flag = false
+      }
   }
 }

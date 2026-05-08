@@ -2,14 +2,16 @@ import 'package:find_me_words/feature/home/presentation/controllers/home_page_co
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.isDataBaseConfigSuccess});
+  const HomeScreen({
+    super.key,
+    required this.isDataBaseConfigSuccess,
+  });
 
   final bool isDataBaseConfigSuccess;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
+  ConsumerState<HomeScreen> createState() {
     return _HomeScreenState();
   }
 }
@@ -20,41 +22,105 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
-    if (!widget.isDataBaseConfigSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to setup local Database."))
-      );
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      if (!widget.isDataBaseConfigSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Failed to setup local database.",
+            ),
+          ),
+        );
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+
+    final state = ref.watch(
+      homePageControllerProvider,
+    );
+
+    return Scaffold(
       backgroundColor: Colors.white,
+
       body: SafeArea(
-        minimum: EdgeInsets.all(20),
+        minimum: const EdgeInsets.all(20),
+
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("data", style: TextStyle(fontSize: 18)),
-            
-            Spacer(),
+
+            const Text(
+              "Find Words",
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
 
             TextField(
               decoration: InputDecoration(
-                labelText: "Search word.."
+                hintText: "Search word...",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                prefixIcon: const Icon(Icons.search),
               ),
-              onSubmitted: (value) {
-                
-              },
+
               onChanged: (value) {
-                print("changed");
-                ref.read(homePageControllerProvider.notifier).onQueryChanged(value); // call the query function on every value change.
+                ref
+                    .read(
+                      homePageControllerProvider.notifier,
+                    )
+                    .onQueryChanged(value);
               },
-              
-            )
+            ),
+
+            const SizedBox(height: 20),
+
+            if (state.isLoading)
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+
+            if (!state.isLoading)
+              Expanded(
+                child: ListView.separated(
+
+                  itemCount: state.suggestions.length,
+
+                  separatorBuilder: (_, __) {
+                    return const Divider(height: 1);
+                  },
+
+                  itemBuilder: (context, index) {
+
+                    final suggestion =
+                        state.suggestions[index];
+
+                    return ListTile(
+
+                      title: Text(suggestion),
+
+                      leading: const Icon(
+                        Icons.menu_book_outlined,
+                      ),
+
+                      onTap: () {
+
+                      },
+                    );
+                  },
+                ),
+              ),
           ],
         ),
-      )
+      ),
     );
   }
 }

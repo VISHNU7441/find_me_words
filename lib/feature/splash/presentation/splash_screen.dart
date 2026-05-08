@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:find_me_words/core/database/app_database.dart';
+import 'package:find_me_words/core/database/services/dictionary_preload_service.dart';
 import 'package:find_me_words/feature/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -11,23 +13,49 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+   bool _isDataBaseConfigSuccess = false;
 
   @override
   void initState() {
     super.initState();
 
-    Timer(
-      const Duration(seconds: 3),
-      () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const HomeScreen(),
-          ),
-        );
-      },
-    );
+    _initializeApp();
   }
+
+  Future<void> _initializeApp() async {
+  try {
+    final preloadService = DictionaryPreloadService(
+      AppDatabase(),
+    );
+
+    await preloadService.preloadDictionary();
+
+    if (mounted) { 
+      setState(() {
+        _isDataBaseConfigSuccess = true;
+      });
+    }
+
+  } catch (e, stackTrace) {
+    setState(() {
+      _isDataBaseConfigSuccess = false;
+    });
+
+    debugPrint('Initialization Error: $e');
+    debugPrintStack(stackTrace: stackTrace);
+
+  } finally {
+
+    if (mounted) {
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => HomeScreen(isDataBaseConfigSuccess: _isDataBaseConfigSuccess,),
+      ),
+    );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {

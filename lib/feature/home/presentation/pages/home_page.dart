@@ -2,12 +2,34 @@ import 'package:find_me_words/feature/home/presentation/controllers/home_page_co
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key, required this.isDataBaseConfigSuccess});
+
+  final bool isDataBaseConfigSuccess;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _HomeScreenState();
+  }
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (!widget.isDataBaseConfigSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to setup local Database."))
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+   return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         minimum: EdgeInsets.all(20),

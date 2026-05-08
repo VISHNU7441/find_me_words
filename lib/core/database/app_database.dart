@@ -54,7 +54,7 @@ class AppDatabase {
         word TEXT PRIMARY KEY,
         meaning TEXT NOT NULL,
         json TEXT,
-        hasFullData INTEGER NOT NULL DEFAULT 0
+        hasFullData INTEGER NOT NULL DEFAULT 0,
         updatedAt INTEGER
       )
     ''');

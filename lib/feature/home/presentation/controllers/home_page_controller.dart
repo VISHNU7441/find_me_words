@@ -73,7 +73,7 @@ class HomePageController extends _$HomePageController {
       // get full json and parse it
     } else if (isPresent) {
       // call the api with the hasBasicMeaning flag = true
-      _searchWordDetails(word);
+       await _searchWordDetails(word);
     } else {
       // call the api with the hasBasicMeaning flag = false
     }
@@ -82,6 +82,7 @@ class HomePageController extends _$HomePageController {
   Future<void> _searchWordDetails(String word) async {
     try {
       state = state.copyWith(
+        wordDetails: null,
         isLoading: true
       );
 

@@ -1,4 +1,5 @@
 import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
+import 'package:find_me_words/feature/home/presentation/pages/word_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -39,6 +40,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Listen for state changes to navigate reactively
+    ref.listen(homePageControllerProvider, (previous, next) {
+      if (next.wordDetails != null && next.wordDetails != previous?.wordDetails) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => WordDetailScreen(word: next.wordDetails!),
+          ),
+        );
+      }
+    });
 
     final state = ref.watch(
       homePageControllerProvider,

@@ -17,7 +17,7 @@ class ApiClient {
       return data.map((e) => WordModel.fromJson(e)).toList();
 
     } on DioException catch (e) {
-      throw Exception(_handleDioError(e));
+      throw _handleDioError(e);
     } catch (e) {
       if (e is Exception) rethrow;
 

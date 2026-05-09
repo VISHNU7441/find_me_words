@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:find_me_words/core/database/app_database.dart';
 import 'package:find_me_words/core/database/services/dictionary_query_service.dart';
+import 'package:find_me_words/core/models/remote/word_model.dart';
+import 'package:find_me_words/core/network/api_client.dart';
+import 'package:find_me_words/core/network/api_exceptions.dart';
+import 'package:find_me_words/core/network/dio_provider.dart';
 import 'package:find_me_words/feature/home/presentation/states/home_state.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -11,7 +15,12 @@ class HomePageController extends _$HomePageController {
   Timer? _debounce;
 
   final AppDatabase _database = AppDatabase();
-  late final DictionaryQueryService _queryService = DictionaryQueryService(_database);
+  late final DictionaryQueryService _queryService = DictionaryQueryService(
+    _database,
+  );
+
+  final dio = DioProvider.createDio();
+  late final apiClient = ApiClient(dio);
 
   @override
   HomeState build() {
@@ -30,7 +39,9 @@ class HomePageController extends _$HomePageController {
 
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () {
-      _fetchSuggestions(value);         // call the function when the user stopped typing for 5 sec.
+      _fetchSuggestions(
+        value,
+      ); // call the function when the user stopped typing for 5 sec.
     });
   }
 
@@ -43,30 +54,65 @@ class HomePageController extends _$HomePageController {
     state = state.copyWith(isLoading: true);
 
     try {
-
       List<String> results;
 
-      results =  await _queryService.searchSuggestions(query);
+      results = await _queryService.searchSuggestions(query);
 
-      state = state.copyWith(
-        suggestions: results,
-        isLoading: false,
-      );
+      state = state.copyWith(suggestions: results, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
     }
   }
 
   Future<void> searchFor(String word) async {
-      final isPresent = await _queryService.isWordPresent(word);
-      final isFullExplanationPresent = await _queryService.isWordHasFullExplanation(word);
+    final isPresent = await _queryService.isWordPresent(word);
+    final isFullExplanationPresent = await _queryService
+        .isWordHasFullExplanation(word);
 
-      if (isPresent && isFullExplanationPresent) {
-        // get full json and parse it
-      } else if (isPresent) {
-        // call the api with the hasBasicMeaning flag = true
-      } else {
-        // call the api with the hasBasicMeaning flag = false
-      }
+    if (isPresent && isFullExplanationPresent) {
+      // get full json and parse it
+    } else if (isPresent) {
+      // call the api with the hasBasicMeaning flag = true
+      _searchWordDetails(word);
+    } else {
+      // call the api with the hasBasicMeaning flag = false
+    }
+  }
+
+  Future<void> _searchWordDetails(String word) async {
+    try {
+      state = state.copyWith(
+        isLoading: true
+      );
+
+      final result = await _fetchWordDetails(word);
+
+      state = state.copyWith(
+        wordDetails: result.first,
+        isLoading: false
+      );
+
+    } on NoInternetException {
+      state = state.copyWith(
+        hasInternet: false,
+        isLoading: false
+      );
+    } on TimeoutException {
+      state = state.copyWith(
+        isLoading: false
+      );
+    } on ServerException {
+      state = state.copyWith(
+        isLoading: false
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false
+      );
+    }
+  }
+
+  Future<List<WordModel>> _fetchWordDetails(String word) async {
+    return await apiClient.getWordDetails(word);
   }
 }

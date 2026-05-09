@@ -57,8 +57,7 @@ class HomePageController extends _$HomePageController {
     }
   }
 
-
-  Future<void> _searchFor(String word) async {
+  Future<void> searchFor(String word) async {
       final isPresent = await _queryService.isWordPresent(word);
       final isFullExplanationPresent = await _queryService.isWordHasFullExplanation(word);
 

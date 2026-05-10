@@ -147,6 +147,7 @@ class HomePageController extends _$HomePageController {
         hasInternet: false,
         isLoading: false
       );
+      rethrow;
     } on TimeoutException {
       state = state.copyWith(
         isLoading: false
@@ -168,7 +169,7 @@ class HomePageController extends _$HomePageController {
     }
   }
 
-Future<void> _getTheDetailsFromBackend(String word) async {
+  Future<void> _getTheDetailsFromBackend(String word) async {
     try {
       // call the api with the hasBasicMeaning flag = true
       // after successful api, update the full meaning on the local db
@@ -176,9 +177,39 @@ Future<void> _getTheDetailsFromBackend(String word) async {
       if (state.wordDetails != null) {
         await _updateDataOnDataBase(word, state.wordDetails!);
       }
+    } on NoInternetException {
+      // If offline, fetch the basic meaning from the local database
+      final meaning = await _queryService.getMeaningForWord(word);
+      if (meaning != null) {
+        // Convert the basic local data into a WordModel so the UI can display it.
+        _updateTheModelWith(meaning, word);
+      }
     } catch (e) {
       debugPrint("Error fetching details: $e");
     }
+  }
+
+  void _updateTheModelWith(String meaning, String word) {
+    final simplifiedWordModel = WordModel(
+      word: word,
+      phonetics: [],
+      meanings: [
+        MeaningModel(
+          partOfSpeech: 'Word',
+          definitions: [
+            DefinitionModel(definition: meaning, synonyms: [], antonyms: []),
+          ],
+          synonyms: [],
+          antonyms: [],
+        ),
+      ],
+      sourceUrls: [],
+    );
+
+    state = state.copyWith(
+      wordDetails: () => simplifiedWordModel,
+      isLoading: false,
+    );
   }
 
   // API Call

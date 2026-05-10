@@ -1,4 +1,5 @@
 import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
+import 'package:find_me_words/feature/home/presentation/pages/bookmark_screen.dart';
 import 'package:find_me_words/feature/home/presentation/pages/word_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,7 +87,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
 
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => BookmarkScreen()));
+                  },
                   icon: const Icon(Icons.bookmark_border),
                 ),
               ],

@@ -7,6 +7,7 @@ class DictionaryQueryService {
 
   const DictionaryQueryService(this.appDatabase);
 
+  // MARK: Home screen session
   Future<bool> isWordPresent(String word) async {
     final db = await appDatabase.database;
 
@@ -115,5 +116,50 @@ class DictionaryQueryService {
     );
 
     return result.map((e) => e['word'] as String).toList();
+  }
+
+  // MARK: Bookmark session
+  Future<List<String>> getBookmarkedWords() async {
+    final db = await appDatabase.database;
+
+    final result = await db.query(
+      'words',
+      columns: ['word'],
+      where: 'isBookmarked = ?',
+      whereArgs: [1],
+      orderBy: 'updatedAt DESC',
+    );
+
+    return result.map((e) => e['word'] as String).toList();
+  }
+
+  Future<void> toggleBookmark(String word) async {
+    final db = await appDatabase.database;
+
+    /// Get current state
+    final result = await db.query(
+      'words',
+      columns: ['isBookmarked'],
+      where: 'word = ?',
+      whereArgs: [word],
+      limit: 1,
+    );
+
+    if (result.isEmpty) {
+      return;
+    }
+
+    final currentValue = result.first['isBookmarked'] as int;
+    final newValue = currentValue == 1 ? 0 : 1;
+
+    await db.update(
+      'words',
+      {
+        'isBookmarked': newValue,
+        'updatedAt': DateTime.now().millisecondsSinceEpoch,
+      },
+      where: 'word = ?',
+      whereArgs: [word],
+    );
   }
 }

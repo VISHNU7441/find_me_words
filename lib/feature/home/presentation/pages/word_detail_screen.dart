@@ -1,8 +1,10 @@
+import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/models/remote/word_model.dart';
 
-class WordDetailScreen extends StatelessWidget {
+class WordDetailScreen extends ConsumerWidget {
   final WordModel word;
 
   const WordDetailScreen({
@@ -11,7 +13,7 @@ class WordDetailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -31,12 +33,8 @@ class WordDetailScreen extends StatelessWidget {
 
         actions: [
           IconButton(
-            onPressed: () {
-
-              /// TODO:
-              /// Save bookmark
-
-              debugPrint('Bookmark tapped');
+            onPressed: () async {
+             await ref.read(homePageControllerProvider.notifier).updateTheBookmarkState(word.word);
             },
             icon: const Icon(
               Icons.bookmark_border_rounded,

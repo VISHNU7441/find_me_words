@@ -148,4 +148,22 @@ class HomePageController extends _$HomePageController {
     final jsonModel = jsonEncode(wordDetails.toJson());
     await _queryService.updateFullExplanationForWord(word: word,json: jsonModel);
   }
+
+  // bookmark helper functions
+  Future<void> getBookmarkedItems() async {
+    state = state.copyWith(
+      isLoading: true
+    );
+
+    final result = await _queryService.getBookmarkedWords();
+
+    state = state.copyWith(
+      bookmarkItems: result,
+      isLoading: false
+    );
+  }
+
+  Future<void> updateTheBookmarkState(String word) async {
+    await _queryService.toggleBookmark(word);
+  }
 }

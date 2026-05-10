@@ -2,13 +2,29 @@ import 'package:find_me_words/feature/home/presentation/controllers/home_page_co
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BookmarkScreen extends ConsumerWidget {
+class BookmarkScreen extends ConsumerStatefulWidget {
   const BookmarkScreen({
     super.key,
   });
+  
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _BookmarkScreenState();
+  }
+}
+class _BookmarkScreenState extends ConsumerState  {
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(homePageControllerProvider.notifier).getBookmarkedItems();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     final state = ref.watch(
       homePageControllerProvider,
@@ -160,10 +176,7 @@ class BookmarkScreen extends ConsumerWidget {
                       trailing: IconButton(
                         onPressed: () async {
 
-                          // await controller
-                          //     .removeBookmark(
-                          //   word,
-                          // );
+                          await controller.updateTheBookmarkState(word);
 
                           if (!context.mounted) {
                             return;

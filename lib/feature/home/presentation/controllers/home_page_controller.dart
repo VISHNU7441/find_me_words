@@ -165,5 +165,7 @@ class HomePageController extends _$HomePageController {
 
   Future<void> updateTheBookmarkState(String word) async {
     await _queryService.toggleBookmark(word);
+
+    await getBookmarkedItems();
   }
 }

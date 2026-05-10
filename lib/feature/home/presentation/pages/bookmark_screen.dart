@@ -4,17 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class BookmarkScreen extends ConsumerStatefulWidget {
-  const BookmarkScreen({
-    super.key,
-  });
-  
+  const BookmarkScreen({super.key});
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _BookmarkScreenState();
   }
 }
-class _BookmarkScreenState extends ConsumerState  {
 
+class _BookmarkScreenState extends ConsumerState {
   @override
   void initState() {
     super.initState();
@@ -26,14 +24,9 @@ class _BookmarkScreenState extends ConsumerState  {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(homePageControllerProvider);
 
-    final state = ref.watch(
-      homePageControllerProvider,
-    );
-
-    final controller = ref.read(
-      homePageControllerProvider.notifier,
-    );
+    final controller = ref.read(homePageControllerProvider.notifier);
 
     final bookmarkItems = state.bookmarkItems;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -68,16 +61,12 @@ class _BookmarkScreenState extends ConsumerState  {
       ),
 
       body: SafeArea(
-
         child: bookmarkItems.isEmpty
-
             ? Center(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
 
                   children: [
-
                     Icon(
                       Icons.bookmark_border_rounded,
                       size: 80,
@@ -96,72 +85,56 @@ class _BookmarkScreenState extends ConsumerState  {
                   ],
                 ),
               )
-
             : ListView.separated(
+                padding: const EdgeInsets.all(20),
 
-                padding:
-                    const EdgeInsets.all(20),
-
-                itemCount:
-                    bookmarkItems.length,
+                itemCount: bookmarkItems.length,
 
                 separatorBuilder: (_, __) {
-                  return const SizedBox(
-                    height: 14,
-                  );
+                  return const SizedBox(height: 14);
                 },
 
-                itemBuilder: (
-                  context,
-                  index,
-                ) {
-
-                  final word =
-                      bookmarkItems[index];
+                itemBuilder: (context, index) {
+                  final word = bookmarkItems[index];
 
                   return Container(
                     decoration: BoxDecoration(
                       color: isDarkMode ? Colors.grey.shade900 : Colors.white,
 
-                      borderRadius:
-                          BorderRadius.circular(
-                        18,
-                      ),
+                      borderRadius: BorderRadius.circular(18),
 
                       boxShadow: [
                         BoxShadow(
-                          color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black
-                              .withOpacity(0.05),
+                          color: isDarkMode
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.black.withOpacity(0.05),
 
                           blurRadius: 10,
-                          offset:
-                              const Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
 
                     child: ListTile(
-
-                      contentPadding:
-                          const EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: 20,
                         vertical: 8,
                       ),
 
                       leading: CircleAvatar(
-                        backgroundColor:
-                            isDarkMode ? Colors.blue.shade900 : Colors.blue.shade50,
+                        backgroundColor: isDarkMode
+                            ? Colors.blue.shade900
+                            : Colors.blue.shade50,
 
                         child: Text(
-                          word[0]
-                              .toUpperCase(),
+                          word[0].toUpperCase(),
 
                           style: TextStyle(
-                            color:
-                                isDarkMode ? Colors.blue.shade200 : Colors.blue.shade800,
+                            color: isDarkMode
+                                ? Colors.blue.shade200
+                                : Colors.blue.shade800,
 
-                            fontWeight:
-                                FontWeight.bold,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -170,27 +143,21 @@ class _BookmarkScreenState extends ConsumerState  {
                         word,
                         style: const TextStyle(
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.w600,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
 
                       trailing: IconButton(
                         onPressed: () async {
-
                           await controller.updateTheBookmarkState(word);
 
                           if (!context.mounted) {
                             return;
                           }
 
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(
-                                '"$word" removed from bookmarks',
-                              ),
+                              content: Text('"$word" removed from bookmarks'),
                             ),
                           );
                         },

@@ -14,13 +14,13 @@ class WordDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isWordBookMarked = ref.watch(homePageControllerProvider).bookmarkItems.contains(word.word);
+
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -30,29 +30,28 @@ class WordDetailScreen extends ConsumerWidget {
             color: Colors.black,
           ),
         ),
-
         actions: [
           IconButton(
             onPressed: () async {
-             await ref.read(homePageControllerProvider.notifier).updateTheBookmarkState(word.word);
+              await ref
+                  .read(homePageControllerProvider.notifier)
+                  .updateTheBookmarkState(word.word);
             },
-            icon: const Icon(
-              Icons.bookmark_border_rounded,
-              color: Colors.black,
+            icon: Icon(
+              isWordBookMarked
+                  ? Icons.bookmark_rounded
+                  : Icons.bookmark_border_rounded,
+              color: isWordBookMarked ? Colors.amber : Colors.black,
             ),
           ),
         ],
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-
             children: [
-
               /// WORD
               Text(
                 word.word,
@@ -81,29 +80,22 @@ class WordDetailScreen extends ConsumerWidget {
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
-
                   children: word.phonetics.map((phonetic) {
-
-                    if (phonetic.audio == null ||
-                        phonetic.audio!.isEmpty) {
+                    if (phonetic.audio == null || phonetic.audio!.isEmpty) {
                       return const SizedBox.shrink();
                     }
 
                     return ElevatedButton.icon(
                       onPressed: () {
-
                         /// TODO:
                         /// Play audio
-
                         debugPrint(
                           phonetic.audio,
                         );
                       },
-
                       icon: const Icon(
                         Icons.volume_up_rounded,
                       ),
-
                       label: Text(
                         phonetic.text ?? 'Audio',
                       ),
@@ -116,31 +108,23 @@ class WordDetailScreen extends ConsumerWidget {
               /// MEANINGS
               ...word.meanings.map(
                 (meaning) {
-
                   return Padding(
                     padding: const EdgeInsets.only(
                       bottom: 28,
                     ),
-
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         /// PART OF SPEECH
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 6,
                           ),
-
                           decoration: BoxDecoration(
                             color: Colors.blue.shade50,
-                            borderRadius:
-                                BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-
                           child: Text(
                             meaning.partOfSpeech,
                             style: TextStyle(
@@ -156,37 +140,26 @@ class WordDetailScreen extends ConsumerWidget {
                         ...List.generate(
                           meaning.definitions.length,
                           (index) {
-
-                            final definition =
-                                meaning.definitions[index];
+                            final definition = meaning.definitions[index];
 
                             return Padding(
-                              padding:
-                                  const EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 bottom: 16,
                               ),
-
                               child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
                                   Text(
                                     '${index + 1}. ',
-                                    style:
-                                        const TextStyle(
-                                      fontWeight:
-                                          FontWeight.bold,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                     ),
                                   ),
-
                                   Expanded(
                                     child: Text(
                                       definition.definition,
-                                      style:
-                                          const TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         height: 1.5,
                                       ),
@@ -200,9 +173,7 @@ class WordDetailScreen extends ConsumerWidget {
 
                         /// SYNONYMS
                         if (meaning.synonyms.isNotEmpty) ...[
-
                           const SizedBox(height: 12),
-
                           const Text(
                             'Synonyms',
                             style: TextStyle(
@@ -210,37 +181,26 @@ class WordDetailScreen extends ConsumerWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-
                           const SizedBox(height: 10),
-
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-
-                            children:
-                                meaning.synonyms.map((e) {
-
+                            children: meaning.synonyms.map((e) {
                               return Container(
-                                padding:
-                                    const EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 14,
                                   vertical: 8,
                                 ),
-
                                 decoration: BoxDecoration(
-                                  color:
-                                      Colors.green.shade50,
-                                  borderRadius:
-                                      BorderRadius.circular(
+                                  color: Colors.green.shade50,
+                                  borderRadius: BorderRadius.circular(
                                     20,
                                   ),
                                 ),
-
                                 child: Text(
                                   e,
                                   style: TextStyle(
-                                    color: Colors
-                                        .green.shade900,
+                                    color: Colors.green.shade900,
                                   ),
                                 ),
                               );
@@ -250,9 +210,7 @@ class WordDetailScreen extends ConsumerWidget {
 
                         /// ANTONYMS
                         if (meaning.antonyms.isNotEmpty) ...[
-
                           const SizedBox(height: 20),
-
                           const Text(
                             'Antonyms',
                             style: TextStyle(
@@ -260,36 +218,26 @@ class WordDetailScreen extends ConsumerWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-
                           const SizedBox(height: 10),
-
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-
-                            children:
-                                meaning.antonyms.map((e) {
-
+                            children: meaning.antonyms.map((e) {
                               return Container(
-                                padding:
-                                    const EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                   horizontal: 14,
                                   vertical: 8,
                                 ),
-
                                 decoration: BoxDecoration(
                                   color: Colors.red.shade50,
-                                  borderRadius:
-                                      BorderRadius.circular(
+                                  borderRadius: BorderRadius.circular(
                                     20,
                                   ),
                                 ),
-
                                 child: Text(
                                   e,
                                   style: TextStyle(
-                                    color:
-                                        Colors.red.shade900,
+                                    color: Colors.red.shade900,
                                   ),
                                 ),
                               );

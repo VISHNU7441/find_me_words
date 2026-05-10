@@ -1,6 +1,7 @@
 import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class BookmarkScreen extends ConsumerStatefulWidget {
   const BookmarkScreen({
@@ -46,7 +47,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            context.pop();
           },
 
           icon: Icon(

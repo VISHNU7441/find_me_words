@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class NoDataScreen extends StatelessWidget {
   final String title;
@@ -22,7 +23,7 @@ class NoDataScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => context.pop(),
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             color: isDarkMode ? Colors.white : Colors.black,
@@ -76,7 +77,7 @@ class NoDataScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => context.pop(),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,

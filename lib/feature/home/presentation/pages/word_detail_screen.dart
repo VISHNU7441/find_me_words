@@ -1,6 +1,7 @@
 import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/models/remote/word_model.dart';
 
@@ -25,7 +26,7 @@ class WordDetailScreen extends ConsumerWidget {
         leading: IconButton(
           onPressed: () {
             ref.read(homePageControllerProvider.notifier).clearWordDetails();
-            Navigator.pop(context);
+            context.pop();
           },
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:find_me_words/core/database/app_database.dart';
 import 'package:find_me_words/core/database/services/dictionary_preload_service.dart';
-import 'package:find_me_words/feature/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -37,9 +37,11 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
   } catch (e, stackTrace) {
-    setState(() {
-      _isDataBaseConfigSuccess = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isDataBaseConfigSuccess = false;
+      });
+    }
 
     debugPrint('Initialization Error: $e');
     debugPrintStack(stackTrace: stackTrace);
@@ -47,12 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
   } finally {
 
     if (mounted) {
-      Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HomeScreen(isDataBaseConfigSuccess: _isDataBaseConfigSuccess,),
-      ),
-    );
+      context.go('/home', extra: _isDataBaseConfigSuccess);
     }
   }
 }

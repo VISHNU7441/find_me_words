@@ -93,17 +93,18 @@ class HomePageController extends _$HomePageController {
   }
 
   Future<void> searchFor(String word) async {
+    // Clear previous states before starting a new search
+    state = state.copyWith(
+      wordDetails: () => null,
+      shouldShowNoDataScreen: false,
+      isLoading: true,
+    );
+
     final isPresent = await _queryService.isWordPresent(word);
-    final isFullExplanationPresent = await _queryService
-        .isWordHasFullExplanation(word);
+    final isFullExplanationPresent =
+        await _queryService.isWordHasFullExplanation(word);
 
     if (isPresent && isFullExplanationPresent) {
-      // get full json and parse it
-      state = state.copyWith(
-        wordDetails: () => null,
-        isLoading: true
-      );
-
       // get the data from the local DB
       final cachedData = await _queryService.getFullExplanationForWord(word);
       final decodedData = jsonDecode(cachedData!);
@@ -111,11 +112,10 @@ class HomePageController extends _$HomePageController {
 
       state = state.copyWith(
         wordDetails: () => wordDetails,
-        isLoading: false
+        isLoading: false,
       );
-
     } else if (isPresent) {
-      _getTheDetailsFromBackend(word);
+      await _getTheDetailsFromBackend(word);
     } else {
       // call the api with the hasBasicMeaning flag = false
       await _searchWordDetails(word);
@@ -130,42 +130,33 @@ class HomePageController extends _$HomePageController {
 
   Future<void> _searchWordDetails(String word) async {
     try {
+      // Ensure we are in loading state and details are null
       state = state.copyWith(
         wordDetails: () => null,
-        isLoading: true
+        isLoading: true,
       );
 
       final result = await _fetchWordDetails(word);
 
       state = state.copyWith(
         wordDetails: () => result.first,
-        isLoading: false
+        isLoading: false,
       );
-
     } on NoInternetException {
-      state = state.copyWith(
-        hasInternet: false,
-        isLoading: false
-      );
+      state = state.copyWith(hasInternet: false, isLoading: false);
       rethrow;
     } on TimeoutException {
-      state = state.copyWith(
-        isLoading: false
-      );
+      state = state.copyWith(isLoading: false);
     } on NotFoundException {
       state = state.copyWith(
         wordDetails: () => null,
         isLoading: false,
-        shouldShowNoDataScreen: true
+        shouldShowNoDataScreen: true,
       );
     } on ServerException {
-      state = state.copyWith(
-        isLoading: false
-      );
+      state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false
-      );
+      state = state.copyWith(isLoading: false);
     }
   }
 

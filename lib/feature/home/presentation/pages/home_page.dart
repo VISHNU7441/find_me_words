@@ -1,9 +1,7 @@
 import 'package:find_me_words/feature/home/presentation/controllers/home_page_controller.dart';
-import 'package:find_me_words/feature/home/presentation/pages/bookmark_screen.dart';
-import 'package:find_me_words/feature/home/presentation/pages/no_data_screen.dart';
-import 'package:find_me_words/feature/home/presentation/pages/word_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isDataBaseConfigSuccess});
@@ -38,22 +36,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ref.listen(homePageControllerProvider, (previous, next) {
       if (next.wordDetails != null &&
           next.wordDetails != previous?.wordDetails) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => WordDetailScreen(word: next.wordDetails!),
-          ),
-        );
+        context.push('/detail', extra: next.wordDetails!).then((_) {
+          ref.read(homePageControllerProvider.notifier).clearWordDetails();
+        });
       }
 
       if (next.shouldShowNoDataScreen &&
           (previous == null || !previous.shouldShowNoDataScreen)) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const NoDataScreen(),
-          ),
-        ).then((_) {
+        context.push('/no-data').then((_) {
           ref.read(homePageControllerProvider.notifier).clearNoDataState();
         });
       }
@@ -108,8 +98,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => BookmarkScreen()));
+                    context.push('/bookmarks');
                   },
                   icon: const Icon(Icons.bookmark_border),
                 ),

@@ -1,6 +1,6 @@
 import 'package:find_me_words/core/models/remote/word_model.dart';
 import 'package:find_me_words/feature/home/presentation/pages/bookmark_screen.dart';
-import 'package:find_me_words/feature/home/presentation/pages/home_page.dart';
+import 'package:find_me_words/feature/home/presentation/pages/home_screen.dart';
 import 'package:find_me_words/feature/home/presentation/pages/no_data_screen.dart';
 import 'package:find_me_words/feature/home/presentation/pages/word_detail_screen.dart';
 import 'package:find_me_words/feature/splash/presentation/splash_screen.dart';

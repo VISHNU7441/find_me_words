@@ -9,7 +9,8 @@ class NoDataScreen extends StatelessWidget {
   const NoDataScreen({
     super.key,
     this.title = 'Word Not Found',
-    this.message = 'We couldn\'t find any information for this word in our dictionary.',
+    this.message =
+        'We couldn\'t find any information for this word in our dictionary.',
     this.icon = Icons.search_off_rounded,
   });
 
@@ -30,6 +31,7 @@ class NoDataScreen extends StatelessWidget {
           ),
         ),
       ),
+      
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(40.0),
@@ -39,16 +41,16 @@ class NoDataScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: isDarkMode 
-                      ? Colors.blue.shade900.withOpacity(0.2) 
+                  color: isDarkMode
+                      ? Colors.blue.shade900.withOpacity(0.2)
                       : Colors.blue.shade50,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
                   size: 80,
-                  color: isDarkMode 
-                      ? Colors.blue.shade200 
+                  color: isDarkMode
+                      ? Colors.blue.shade200
                       : Colors.blue.shade400,
                 ),
               ),
@@ -67,8 +69,8 @@ class NoDataScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  color: isDarkMode 
-                      ? Colors.grey.shade400 
+                  color: isDarkMode
+                      ? Colors.grey.shade400
                       : Colors.grey.shade600,
                   height: 1.5,
                 ),
@@ -81,9 +83,7 @@ class NoDataScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -91,10 +91,7 @@ class NoDataScreen extends StatelessWidget {
                   ),
                   child: const Text(
                     'Try another word',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -105,4 +102,3 @@ class NoDataScreen extends StatelessWidget {
     );
   }
 }
-

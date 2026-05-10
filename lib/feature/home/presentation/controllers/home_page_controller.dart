@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:find_me_words/core/database/app_database.dart';
 import 'package:find_me_words/core/database/services/dictionary_query_service.dart';
 import 'package:find_me_words/core/models/extensions/word_model_mapper.dart';
@@ -16,6 +17,7 @@ part 'home_page_controller.g.dart';
 @riverpod
 class HomePageController extends _$HomePageController {
   Timer? _debounce;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   final AppDatabase _database = AppDatabase();
   late final DictionaryQueryService _queryService = DictionaryQueryService(
@@ -29,11 +31,34 @@ class HomePageController extends _$HomePageController {
   HomeState build() {
     ref.keepAlive();
 
+    _initConnectivity();
+
     ref.onDispose(() {
       _debounce?.cancel();
+      _connectivitySubscription?.cancel();
     });
 
     return HomeState.initial();
+  }
+
+  void _initConnectivity() {
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen((results) {
+      _updateConnectionStatus(results);
+    });
+
+    Connectivity().checkConnectivity().then((results) {
+      _updateConnectionStatus(results);
+    });
+  }
+
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    final hasConnection = results.any((result) =>
+        result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi ||
+        result == ConnectivityResult.ethernet);
+
+    state = state.copyWith(hasInternet: hasConnection);
   }
 
   // update the state on every text change

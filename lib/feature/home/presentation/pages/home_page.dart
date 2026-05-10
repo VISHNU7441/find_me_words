@@ -72,8 +72,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Container(
                   width: 10,
                   height: 10,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
+                  decoration: BoxDecoration(
+                    color: state.hasInternet ? Colors.green : Colors.red,
                     shape: BoxShape.circle,
                   ),
                 ),

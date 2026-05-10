@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:find_me_words/core/database/app_database.dart';
 import 'package:find_me_words/core/database/services/dictionary_query_service.dart';
 import 'package:find_me_words/core/models/extensions/word_model_mapper.dart';
-import 'package:find_me_words/core/models/local/word_cache_model.dart';
 import 'package:find_me_words/core/models/remote/word_model.dart';
 import 'package:find_me_words/core/network/api_client.dart';
 import 'package:find_me_words/core/network/api_exceptions.dart';

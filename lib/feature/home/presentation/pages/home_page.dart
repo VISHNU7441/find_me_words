@@ -50,7 +50,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final isSearchEmpty =
         state.query.trim().isEmpty && state.suggestions.isEmpty;
-    final isDarkMode = state.isDarkMode;
+    final themeMode = state.themeMode;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -85,7 +85,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ref.read(homePageControllerProvider.notifier).toggleTheme();
                   },
                   icon: Icon(
-                    isDarkMode ? Icons.light_mode : Icons.dark_mode_outlined,
+                    themeMode == ThemeMode.system
+                        ? Icons.brightness_auto
+                        : (themeMode == ThemeMode.dark
+                            ? Icons.light_mode
+                            : Icons.dark_mode_outlined),
                   ),
                 ),
 

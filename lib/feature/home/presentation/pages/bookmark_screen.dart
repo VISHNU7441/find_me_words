@@ -35,7 +35,7 @@ class _BookmarkScreenState extends ConsumerState  {
     );
 
     final bookmarkItems = state.bookmarkItems;
-    final isDarkMode = state.isDarkMode;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

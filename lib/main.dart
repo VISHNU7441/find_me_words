@@ -13,12 +13,12 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = ref.watch(homePageControllerProvider.select((s) => s.isDarkMode));
+    final themeMode = ref.watch(homePageControllerProvider.select((s) => s.themeMode));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Find Me Words',
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: themeMode,
       theme: lightTheme,
       darkTheme: darkTheme,
       home: const SplashScreen(),

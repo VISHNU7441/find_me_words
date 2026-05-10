@@ -15,7 +15,7 @@ class WordDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isWordBookMarked = ref.watch(homePageControllerProvider).bookmarkItems.contains(word.word);
-    final isDarkMode = ref.watch(homePageControllerProvider).isDarkMode;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

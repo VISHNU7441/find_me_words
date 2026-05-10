@@ -8,6 +8,7 @@ import 'package:find_me_words/core/network/api_client.dart';
 import 'package:find_me_words/core/network/api_exceptions.dart';
 import 'package:find_me_words/core/network/dio_provider.dart';
 import 'package:find_me_words/feature/home/presentation/states/home_state.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_page_controller.g.dart';
@@ -154,7 +155,19 @@ class HomePageController extends _$HomePageController {
   }
 
   void toggleTheme() {
-    state = state.copyWith(isDarkMode: !state.isDarkMode);
+    ThemeMode nextMode;
+    switch (state.themeMode) {
+      case ThemeMode.system:
+        nextMode = ThemeMode.light;
+        break;
+      case ThemeMode.light:
+        nextMode = ThemeMode.dark;
+        break;
+      case ThemeMode.dark:
+        nextMode = ThemeMode.system;
+        break;
+    }
+    state = state.copyWith(themeMode: nextMode);
   }
 
   // bookmark helper functions

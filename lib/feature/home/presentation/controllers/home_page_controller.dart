@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:find_me_words/core/database/app_database.dart';
 import 'package:find_me_words/core/database/services/dictionary_query_service.dart';
+import 'package:find_me_words/core/models/extensions/word_model_mapper.dart';
+import 'package:find_me_words/core/models/local/word_cache_model.dart';
 import 'package:find_me_words/core/models/remote/word_model.dart';
 import 'package:find_me_words/core/network/api_client.dart';
 import 'package:find_me_words/core/network/api_exceptions.dart';
@@ -71,11 +74,34 @@ class HomePageController extends _$HomePageController {
 
     if (isPresent && isFullExplanationPresent) {
       // get full json and parse it
+      state = state.copyWith(
+        wordDetails: null,
+        isLoading: true
+      );
+
+      // get the data from the local DB
+      final cachedData = await _queryService.getFullExplanationForWord(word);
+      final decodedData = jsonDecode(cachedData!);
+      final wordDetails = WordModel.fromJson(decodedData);
+
+      state = state.copyWith(
+        wordDetails: wordDetails,
+        isLoading: false
+      );
+
     } else if (isPresent) {
       // call the api with the hasBasicMeaning flag = true
+      // after successful api, update the full meaning on the local db
        await _searchWordDetails(word);
+       await _updateDataOnDataBase(word, state.wordDetails!);
+
     } else {
       // call the api with the hasBasicMeaning flag = false
+      await _searchWordDetails(word);
+
+      // if the new text has meaning on the backend, the api will success and update that data on local db.
+      final localDBModel = state.wordDetails?.toCacheModel();
+      await _queryService.createNewWordWithFullExplanation(localDBModel!); 
     }
   }
 
@@ -113,7 +139,14 @@ class HomePageController extends _$HomePageController {
     }
   }
 
+  // API Call
   Future<List<WordModel>> _fetchWordDetails(String word) async {
     return await apiClient.getWordDetails(word);
+  }
+
+  // Save the data on Database
+  Future<void> _updateDataOnDataBase(String word, WordModel wordDetails)async {
+    final jsonModel = jsonEncode(wordDetails.toJson());
+    await _queryService.updateFullExplanationForWord(word: word,json: jsonModel);
   }
 }

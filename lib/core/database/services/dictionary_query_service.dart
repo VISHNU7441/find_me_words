@@ -6,11 +6,8 @@ class DictionaryQueryService {
   final AppDatabase appDatabase;
 
   const DictionaryQueryService(this.appDatabase);
-  
-  Future<bool> isWordPresent(
-    String word,
-  ) async {
 
+  Future<bool> isWordPresent(String word) async {
     final db = await appDatabase.database;
 
     final result = await db.query(
@@ -24,10 +21,7 @@ class DictionaryQueryService {
     return result.isNotEmpty;
   }
 
-  Future<bool> isWordHasFullExplanation(
-    String word,
-  ) async {
-
+  Future<bool> isWordHasFullExplanation(String word) async {
     final db = await appDatabase.database;
 
     final result = await db.query(
@@ -45,10 +39,7 @@ class DictionaryQueryService {
     return result.first['hasFullData'] == 1;
   }
 
-  Future<String?> getFullExplanationForWord(
-    String word,
-  ) async {
-
+  Future<String?> getFullExplanationForWord(String word) async {
     final db = await appDatabase.database;
 
     final result = await db.query(
@@ -66,10 +57,7 @@ class DictionaryQueryService {
     return result.first['json'] as String?;
   }
 
-  Future<String?> getMeaningForWord(
-    String word,
-  ) async {
-
+  Future<String?> getMeaningForWord(String word) async {
     final db = await appDatabase.database;
 
     final result = await db.query(
@@ -89,16 +77,13 @@ class DictionaryQueryService {
 
   Future<void> updateFullExplanationForWord({
     required String word,
-    required String meaning,
     required String json,
   }) async {
-
     final db = await appDatabase.database;
 
     await db.update(
       'words',
       {
-        'meaning': meaning,
         'json': json,
         'hasFullData': 1,
         'updatedAt': DateTime.now().millisecondsSinceEpoch,
@@ -108,10 +93,7 @@ class DictionaryQueryService {
     );
   }
 
-  Future<void> createNewWordWithFullExplanation(
-    WordCacheModel word,
-  ) async {
-
+  Future<void> createNewWordWithFullExplanation(WordCacheModel word) async {
     final db = await appDatabase.database;
 
     await db.insert(
@@ -121,10 +103,7 @@ class DictionaryQueryService {
     );
   }
 
-  Future<List<String>> searchSuggestions(
-    String query,
-  ) async {
-
+  Future<List<String>> searchSuggestions(String query) async {
     final db = await appDatabase.database;
 
     final result = await db.query(
@@ -135,8 +114,6 @@ class DictionaryQueryService {
       limit: 20,
     );
 
-    return result
-        .map((e) => e['word'] as String)
-        .toList();
+    return result.map((e) => e['word'] as String).toList();
   }
 }

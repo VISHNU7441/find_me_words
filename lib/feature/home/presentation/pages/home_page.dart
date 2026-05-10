@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({
-    super.key,
-    required this.isDataBaseConfigSuccess,
-  });
+  const HomeScreen({super.key, required this.isDataBaseConfigSuccess});
 
   final bool isDataBaseConfigSuccess;
 
@@ -18,7 +15,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -28,11 +24,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!widget.isDataBaseConfigSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Failed to setup local database.",
-            ),
-          ),
+          const SnackBar(content: Text("Failed to setup local database.")),
         );
       }
     });
@@ -40,10 +32,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    // Listen for state changes to navigate reactively
+    
     ref.listen(homePageControllerProvider, (previous, next) {
-      if (next.wordDetails != null && next.wordDetails != previous?.wordDetails) {
+      if (next.wordDetails != null &&
+          next.wordDetails != previous?.wordDetails) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -53,11 +45,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     });
 
-    final state = ref.watch(
-      homePageControllerProvider,
-    );
+    final state = ref.watch(homePageControllerProvider);
 
-    final isSearchEmpty = state.query.trim().isEmpty && state.suggestions.isEmpty;
+    final isSearchEmpty =
+        state.query.trim().isEmpty && state.suggestions.isEmpty;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -68,16 +59,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             // HeaderView
             Row(
               children: [
                 const Text(
                   "Find Words",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(width: 10),
@@ -94,21 +81,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const Spacer(),
 
                 IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: const Icon(
-                    Icons.dark_mode_outlined,
-                  ),
+                  onPressed: () {},
+                  icon: const Icon(Icons.dark_mode_outlined),
                 ),
 
                 IconButton(
-                  onPressed: () {
-
-                  },
-                  icon: const Icon(
-                    Icons.bookmark_border,
-                  ),
+                  onPressed: () {},
+                  icon: const Icon(Icons.bookmark_border),
                 ),
               ],
             ),
@@ -127,19 +106,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 suffixIcon: IconButton(
                   onPressed: () {
                     final currentText = _searchController.text;
-                    ref.read(homePageControllerProvider.notifier).searchFor(currentText);
+                    ref
+                        .read(homePageControllerProvider.notifier)
+                        .searchFor(currentText);
                   },
-                  icon: const Icon(
-                    Icons.arrow_forward,
-                  ),
+                  icon: const Icon(Icons.arrow_forward),
                 ),
               ),
 
               onChanged: (value) {
                 ref
-                    .read(
-                      homePageControllerProvider.notifier,
-                    )
+                    .read(homePageControllerProvider.notifier)
                     .onQueryChanged(value);
               },
               onSubmitted: (value) {
@@ -156,16 +133,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.cruelty_free, size: 38, color: Colors.grey),
+                      const Icon(
+                        Icons.cruelty_free,
+                        size: 38,
+                        color: Colors.grey,
+                      ),
 
                       const SizedBox(height: 16),
 
                       const Text(
                         "Search for words",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -173,14 +151,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
 
             if (state.isLoading)
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
+              const Center(child: CircularProgressIndicator()),
 
             if (!state.isLoading && state.suggestions.isNotEmpty)
               Expanded(
                 child: ListView.separated(
-
                   itemCount: state.suggestions.length,
 
                   separatorBuilder: (_, __) {
@@ -188,20 +163,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   },
 
                   itemBuilder: (context, index) {
-
-                    final suggestion =
-                        state.suggestions[index];
+                    final suggestion = state.suggestions[index];
 
                     return ListTile(
-
                       title: Text(suggestion),
 
-                      leading: const Icon(
-                        Icons.menu_book_outlined,
-                      ),
+                      leading: const Icon(Icons.menu_book_outlined),
 
                       onTap: () {
-                        ref.read(homePageControllerProvider.notifier).searchFor(suggestion);
+                        ref
+                            .read(homePageControllerProvider.notifier)
+                            .searchFor(suggestion);
                       },
                     );
                   },

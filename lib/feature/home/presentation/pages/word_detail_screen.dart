@@ -33,7 +33,7 @@ class WordDetailScreen extends ConsumerWidget {
             color: isDarkMode ? Colors.white : Colors.black,
           ),
         ),
-        title: Text(word.word, style: TextStyle(fontSize: 18)),
+        title: Text(word.word, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             onPressed: () async {

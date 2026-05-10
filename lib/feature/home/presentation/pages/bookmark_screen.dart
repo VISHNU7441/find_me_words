@@ -200,13 +200,9 @@ class _BookmarkScreenState extends ConsumerState  {
                       ),
 
                       onTap: () async {
-
-                        /// TODO:
-                        /// Navigate to detail page
-
-                        debugPrint(
-                          'Tapped: $word',
-                        );
+                        ref
+                            .read(homePageControllerProvider.notifier)
+                            .searchFor(word);
                       },
                     ),
                   );

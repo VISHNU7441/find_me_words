@@ -23,6 +23,7 @@ class WordDetailScreen extends ConsumerWidget {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
+            ref.read(homePageControllerProvider.notifier).clearWordDetails();
             Navigator.pop(context);
           },
           icon: const Icon(

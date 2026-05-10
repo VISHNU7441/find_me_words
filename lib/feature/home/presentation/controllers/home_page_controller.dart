@@ -149,6 +149,10 @@ class HomePageController extends _$HomePageController {
     await _queryService.updateFullExplanationForWord(word: word,json: jsonModel);
   }
 
+  void clearWordDetails() {
+    state = state.copyWith(wordDetails: null);
+  }
+
   // bookmark helper functions
   Future<void> getBookmarkedItems() async {
     state = state.copyWith(

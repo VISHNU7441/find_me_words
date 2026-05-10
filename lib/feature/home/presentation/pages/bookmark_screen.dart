@@ -35,29 +35,30 @@ class _BookmarkScreenState extends ConsumerState  {
     );
 
     final bookmarkItems = state.bookmarkItems;
+    final isDarkMode = state.isDarkMode;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
 
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: isDarkMode ? Colors.white : Colors.black,
           ),
         ),
 
-        title: const Text(
+        title: Text(
           'Bookmarks',
           style: TextStyle(
-            color: Colors.black,
+            color: isDarkMode ? Colors.white : Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -69,7 +70,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
         child: bookmarkItems.isEmpty
 
-            ? const Center(
+            ? Center(
                 child: Column(
                   mainAxisAlignment:
                       MainAxisAlignment.center,
@@ -79,16 +80,16 @@ class _BookmarkScreenState extends ConsumerState  {
                     Icon(
                       Icons.bookmark_border_rounded,
                       size: 80,
-                      color: Colors.grey,
+                      color: isDarkMode ? Colors.grey.shade600 : Colors.grey,
                     ),
 
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     Text(
                       'No bookmarks yet',
                       style: TextStyle(
                         fontSize: 18,
-                        color: Colors.grey,
+                        color: isDarkMode ? Colors.grey.shade400 : Colors.grey,
                       ),
                     ),
                   ],
@@ -119,7 +120,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
                   return Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDarkMode ? Colors.grey.shade900 : Colors.white,
 
                       borderRadius:
                           BorderRadius.circular(
@@ -128,7 +129,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black
+                          color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black
                               .withOpacity(0.05),
 
                           blurRadius: 10,
@@ -148,7 +149,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
                       leading: CircleAvatar(
                         backgroundColor:
-                            Colors.blue.shade50,
+                            isDarkMode ? Colors.blue.shade900 : Colors.blue.shade50,
 
                         child: Text(
                           word[0]
@@ -156,7 +157,7 @@ class _BookmarkScreenState extends ConsumerState  {
 
                           style: TextStyle(
                             color:
-                                Colors.blue.shade800,
+                                isDarkMode ? Colors.blue.shade200 : Colors.blue.shade800,
 
                             fontWeight:
                                 FontWeight.bold,

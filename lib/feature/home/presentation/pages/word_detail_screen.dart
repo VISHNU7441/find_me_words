@@ -15,20 +15,21 @@ class WordDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isWordBookMarked = ref.watch(homePageControllerProvider).bookmarkItems.contains(word.word);
+    final isDarkMode = ref.watch(homePageControllerProvider).isDarkMode;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
           onPressed: () {
             ref.read(homePageControllerProvider.notifier).clearWordDetails();
             Navigator.pop(context);
           },
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
+            color: isDarkMode ? Colors.white : Colors.black,
           ),
         ),
         actions: [
@@ -42,7 +43,7 @@ class WordDetailScreen extends ConsumerWidget {
               isWordBookMarked
                   ? Icons.bookmark_rounded
                   : Icons.bookmark_border_rounded,
-              color: isWordBookMarked ? Colors.amber : Colors.black,
+              color: isWordBookMarked ? Colors.amber : (isDarkMode ? Colors.white : Colors.black),
             ),
           ),
         ],
@@ -70,7 +71,7 @@ class WordDetailScreen extends ConsumerWidget {
                   word.phonetic!,
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.grey.shade700,
+                    color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade700,
                   ),
                 ),
 
@@ -123,13 +124,13 @@ class WordDetailScreen extends ConsumerWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
+                            color: isDarkMode ? Colors.blue.shade900.withOpacity(0.3) : Colors.blue.shade50,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             meaning.partOfSpeech,
                             style: TextStyle(
-                              color: Colors.blue.shade800,
+                              color: isDarkMode ? Colors.blue.shade200 : Colors.blue.shade800,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -193,7 +194,7 @@ class WordDetailScreen extends ConsumerWidget {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.shade50,
+                                  color: isDarkMode ? Colors.green.shade900.withOpacity(0.3) : Colors.green.shade50,
                                   borderRadius: BorderRadius.circular(
                                     20,
                                   ),
@@ -201,7 +202,7 @@ class WordDetailScreen extends ConsumerWidget {
                                 child: Text(
                                   e,
                                   style: TextStyle(
-                                    color: Colors.green.shade900,
+                                    color: isDarkMode ? Colors.green.shade200 : Colors.green.shade900,
                                   ),
                                 ),
                               );
@@ -230,7 +231,7 @@ class WordDetailScreen extends ConsumerWidget {
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.shade50,
+                                  color: isDarkMode ? Colors.red.shade900.withOpacity(0.3) : Colors.red.shade50,
                                   borderRadius: BorderRadius.circular(
                                     20,
                                   ),
@@ -238,7 +239,7 @@ class WordDetailScreen extends ConsumerWidget {
                                 child: Text(
                                   e,
                                   style: TextStyle(
-                                    color: Colors.red.shade900,
+                                    color: isDarkMode ? Colors.red.shade200 : Colors.red.shade900,
                                   ),
                                 ),
                               );

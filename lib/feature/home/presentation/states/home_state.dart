@@ -7,6 +7,7 @@ class HomeState {
   final WordModel? wordDetails;
   final bool hasInternet;
   final bool isLoading;
+  final bool isDarkMode;
 
   HomeState({
     required this.query,
@@ -15,6 +16,7 @@ class HomeState {
     required this.wordDetails,
     required this.hasInternet,
     required this.isLoading,
+    required this.isDarkMode,
   });
 
   factory HomeState.initial() {
@@ -25,6 +27,7 @@ class HomeState {
       wordDetails: null,
       hasInternet: false,
       isLoading: false,
+      isDarkMode: false,
     );
   }
 
@@ -35,6 +38,7 @@ class HomeState {
     WordModel? wordDetails,
     bool? hasInternet,
     bool? isLoading,
+    bool? isDarkMode,
   }) {
     return HomeState(
       query: query ?? this.query,
@@ -43,6 +47,7 @@ class HomeState {
       wordDetails: wordDetails ?? this.wordDetails,
       hasInternet: hasInternet ?? this.hasInternet,
       isLoading: isLoading ?? this.isLoading,
+      isDarkMode: isDarkMode ?? this.isDarkMode,
     );
   }
 }

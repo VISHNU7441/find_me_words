@@ -153,6 +153,10 @@ class HomePageController extends _$HomePageController {
     state = state.copyWith(wordDetails: null);
   }
 
+  void toggleTheme() {
+    state = state.copyWith(isDarkMode: !state.isDarkMode);
+  }
+
   // bookmark helper functions
   Future<void> getBookmarkedItems() async {
     state = state.copyWith(

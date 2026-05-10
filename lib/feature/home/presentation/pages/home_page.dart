@@ -50,13 +50,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     final isSearchEmpty =
         state.query.trim().isEmpty && state.suggestions.isEmpty;
+    final isDarkMode = state.isDarkMode;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         minimum: const EdgeInsets.all(20),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,13 +81,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 const Spacer(),
 
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.dark_mode_outlined),
+                  onPressed: () {
+                    ref.read(homePageControllerProvider.notifier).toggleTheme();
+                  },
+                  icon: Icon(
+                    isDarkMode ? Icons.light_mode : Icons.dark_mode_outlined,
+                  ),
                 ),
 
                 IconButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => BookmarkScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => BookmarkScreen()));
                   },
                   icon: const Icon(Icons.bookmark_border),
                 ),

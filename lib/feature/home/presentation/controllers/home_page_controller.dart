@@ -100,7 +100,7 @@ class HomePageController extends _$HomePageController {
     if (isPresent && isFullExplanationPresent) {
       // get full json and parse it
       state = state.copyWith(
-        wordDetails: null,
+        wordDetails: () => null,
         isLoading: true
       );
 
@@ -110,37 +110,35 @@ class HomePageController extends _$HomePageController {
       final wordDetails = WordModel.fromJson(decodedData);
 
       state = state.copyWith(
-        wordDetails: wordDetails,
+        wordDetails: () => wordDetails,
         isLoading: false
       );
 
     } else if (isPresent) {
-      // call the api with the hasBasicMeaning flag = true
-      // after successful api, update the full meaning on the local db
-       await _searchWordDetails(word);
-       await _updateDataOnDataBase(word, state.wordDetails!);
-
+      _getTheDetailsFromBackend(word);
     } else {
       // call the api with the hasBasicMeaning flag = false
       await _searchWordDetails(word);
 
       // if the new text has meaning on the backend, the api will success and update that data on local db.
       final localDBModel = state.wordDetails?.toCacheModel();
-      await _queryService.createNewWordWithFullExplanation(localDBModel!); 
+      if (localDBModel != null) {
+        await _queryService.createNewWordWithFullExplanation(localDBModel);
+      }
     }
   }
 
   Future<void> _searchWordDetails(String word) async {
     try {
       state = state.copyWith(
-        wordDetails: null,
+        wordDetails: () => null,
         isLoading: true
       );
 
       final result = await _fetchWordDetails(word);
 
       state = state.copyWith(
-        wordDetails: result.first,
+        wordDetails: () => result.first,
         isLoading: false
       );
 
@@ -153,6 +151,12 @@ class HomePageController extends _$HomePageController {
       state = state.copyWith(
         isLoading: false
       );
+    } on NotFoundException {
+      state = state.copyWith(
+        wordDetails: () => null,
+        isLoading: false,
+        shouldShowNoDataScreen: true
+      );
     } on ServerException {
       state = state.copyWith(
         isLoading: false
@@ -161,6 +165,19 @@ class HomePageController extends _$HomePageController {
       state = state.copyWith(
         isLoading: false
       );
+    }
+  }
+
+Future<void> _getTheDetailsFromBackend(String word) async {
+    try {
+      // call the api with the hasBasicMeaning flag = true
+      // after successful api, update the full meaning on the local db
+      await _searchWordDetails(word);
+      if (state.wordDetails != null) {
+        await _updateDataOnDataBase(word, state.wordDetails!);
+      }
+    } catch (e) {
+      debugPrint("Error fetching details: $e");
     }
   }
 
@@ -175,25 +192,6 @@ class HomePageController extends _$HomePageController {
     await _queryService.updateFullExplanationForWord(word: word,json: jsonModel);
   }
 
-  void clearWordDetails() {
-    state = state.copyWith(wordDetails: null);
-  }
-
-  void toggleTheme() {
-    ThemeMode nextMode;
-    switch (state.themeMode) {
-      case ThemeMode.system:
-        nextMode = ThemeMode.light;
-        break;
-      case ThemeMode.light:
-        nextMode = ThemeMode.dark;
-        break;
-      case ThemeMode.dark:
-        nextMode = ThemeMode.system;
-        break;
-    }
-    state = state.copyWith(themeMode: nextMode);
-  }
 
   // bookmark helper functions
   Future<void> getBookmarkedItems() async {
@@ -213,5 +211,33 @@ class HomePageController extends _$HomePageController {
     await _queryService.toggleBookmark(word);
 
     await getBookmarkedItems();
+  }
+
+  // UI helper functions
+  void clearWordDetails() {
+    state = state.copyWith(wordDetails: () => null);
+  }
+
+  void clearNoDataState() {
+    state = state.copyWith(
+      shouldShowNoDataScreen: false,
+      wordDetails: () => null,
+    );
+  }
+
+  void toggleTheme() {
+    ThemeMode nextMode;
+    switch (state.themeMode) {
+      case ThemeMode.system:
+        nextMode = ThemeMode.light;
+        break;
+      case ThemeMode.light:
+        nextMode = ThemeMode.dark;
+        break;
+      case ThemeMode.dark:
+        nextMode = ThemeMode.system;
+        break;
+    }
+    state = state.copyWith(themeMode: nextMode);
   }
 }

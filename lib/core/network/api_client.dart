@@ -35,6 +35,9 @@ class ApiClient {
         return ServerException();
 
       case DioExceptionType.badResponse:
+        if (e.response?.statusCode == 404) {
+          return NotFoundException();
+        }
         return ServerException();  
       default:
         return UnKnownException();

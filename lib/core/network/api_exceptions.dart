@@ -22,6 +22,12 @@ class TimeoutException implements Exception {
   ]);
 }
 
+class NotFoundException implements Exception {
+  final String message;
+
+  NotFoundException([this.message = 'Word not found']);
+}
+
 class UnKnownException implements Exception {
   final String message;
 

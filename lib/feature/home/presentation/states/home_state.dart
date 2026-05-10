@@ -9,6 +9,7 @@ class HomeState {
   final bool hasInternet;
   final bool isLoading;
   final ThemeMode themeMode;
+  final bool shouldShowNoDataScreen;
 
   HomeState({
     required this.query,
@@ -18,6 +19,7 @@ class HomeState {
     required this.hasInternet,
     required this.isLoading,
     required this.themeMode,
+    required this.shouldShowNoDataScreen
   });
 
   factory HomeState.initial() {
@@ -29,6 +31,7 @@ class HomeState {
       hasInternet: false,
       isLoading: false,
       themeMode: ThemeMode.system,
+      shouldShowNoDataScreen: false
     );
   }
 
@@ -36,19 +39,22 @@ class HomeState {
     String? query,
     List<String>? suggestions,
     List<String>? bookmarkItems,
-    WordModel? wordDetails,
+    ValueGetter<WordModel?>? wordDetails,
     bool? hasInternet,
     bool? isLoading,
     ThemeMode? themeMode,
+    bool? shouldShowNoDataScreen,
   }) {
     return HomeState(
       query: query ?? this.query,
       suggestions: suggestions ?? this.suggestions,
       bookmarkItems: bookmarkItems ?? this.bookmarkItems,
-      wordDetails: wordDetails ?? this.wordDetails,
+      wordDetails: wordDetails != null ? wordDetails() : this.wordDetails,
       hasInternet: hasInternet ?? this.hasInternet,
       isLoading: isLoading ?? this.isLoading,
       themeMode: themeMode ?? this.themeMode,
+      shouldShowNoDataScreen:
+          shouldShowNoDataScreen ?? this.shouldShowNoDataScreen,
     );
   }
 }

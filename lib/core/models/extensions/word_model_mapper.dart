@@ -14,6 +14,7 @@ extension WordModelMapper on WordModel {
         toJson(),
       ),
       hasFullData: true,
+      isBookmarked: false
     );
   }
 

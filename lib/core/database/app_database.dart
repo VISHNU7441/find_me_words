@@ -23,7 +23,7 @@ class AppDatabase {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -43,21 +43,25 @@ class AppDatabase {
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Example for future:
     if (oldVersion < 2) {
-      // await db.execute('ALTER TABLE words ADD COLUMN something TEXT');
+      await db.execute('''
+      ALTER TABLE words
+      ADD COLUMN isBookmarked INTEGER NOT NULL DEFAULT 0
+    ''');
     }
   }
 
   /// Words table
   Future<void> _createWordsTable(Database db) async {
     await db.execute('''
-      CREATE TABLE words (
-        word TEXT PRIMARY KEY,
-        meaning TEXT NOT NULL,
-        json TEXT,
-        hasFullData INTEGER NOT NULL DEFAULT 0,
-        updatedAt INTEGER
-      )
-    ''');
+    CREATE TABLE words (
+      word TEXT PRIMARY KEY,
+      meaning TEXT NOT NULL,
+      json TEXT,
+      hasFullData INTEGER NOT NULL DEFAULT 0,
+      isBookmarked INTEGER NOT NULL DEFAULT 0,
+      updatedAt INTEGER
+    )
+  ''');
   }
 
   /// Indexes (VERY IMPORTANT for performance)

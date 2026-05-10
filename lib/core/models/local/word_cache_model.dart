@@ -8,12 +8,14 @@ class WordCacheModel {
   final String meaning;
   final String? json;
   final bool hasFullData;
+  final bool isBookmarked;
 
   const WordCacheModel({
     required this.word,
     required this.meaning,
     this.json,
     required this.hasFullData,
+    required this.isBookmarked
   });
 
   /// Asset JSON preload
@@ -25,6 +27,7 @@ class WordCacheModel {
       meaning: entry.value.toString(),
       json: null,
       hasFullData: false,
+      isBookmarked: false
     );
   }
 
@@ -41,6 +44,7 @@ class WordCacheModel {
         response.map((e) => e.toJson()).toList(),
       ),
       hasFullData: true,
+      isBookmarked: false
     );
   }
 
@@ -53,6 +57,7 @@ class WordCacheModel {
       meaning: map['meaning'],
       json: map['json'],
       hasFullData: map['hasFullData'] == 1,
+      isBookmarked: map['isBookmarked'] == 1
     );
   }
 
